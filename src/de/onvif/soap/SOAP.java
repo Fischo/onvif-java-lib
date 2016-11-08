@@ -26,7 +26,7 @@ import org.w3c.dom.Document;
 
 public class SOAP {
 
-	private boolean logging = true;
+	private boolean logging = false;
 
 	private OnvifDevice onvifDevice;
 
@@ -151,8 +151,8 @@ public class SOAP {
 		marshaller.marshal(soapRequestElem, document);
 		soapMessage.getSOAPBody().addDocument(document);
 
-		// if (needAuthentification)
-		createSoapHeader(soapMessage);
+		if (needAuthentification)
+			createSoapHeader(soapMessage);
 
 		soapMessage.saveChanges();
 		return soapMessage;

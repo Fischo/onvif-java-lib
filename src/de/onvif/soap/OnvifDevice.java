@@ -47,6 +47,8 @@ public class OnvifDevice {
 	private PtzDevices ptzDevices;
 	private MediaDevices mediaDevices;
 	private ImagingDevices imagingDevices;
+	
+	private Capabilities capabilities;
 
 	private Logger logger;
 
@@ -75,6 +77,7 @@ public class OnvifDevice {
 			throw new ConnectException("Host not available.");
 		}
 
+		
 		this.serverDeviceUri = "http://" + HOST_IP + "/onvif/device_service";
 
 		this.username = user;
@@ -86,6 +89,12 @@ public class OnvifDevice {
 		this.mediaDevices = new MediaDevices(this);
 		this.imagingDevices = new ImagingDevices(this);
 		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(getDevices().getDate());
+//		cal.add(Calendar.HOUR, -1);
+		utcTime = sdf.format(cal.getTime());
+	
 		init();
 	}
 
@@ -145,7 +154,7 @@ public class OnvifDevice {
 	 * @throws SOAPException 
 	 */
 	protected void init() throws ConnectException, SOAPException {
-		Capabilities capabilities = getDevices().getCapabilities();
+		capabilities = getDevices().getCapabilities();
 
 		if (capabilities == null) {
 			throw new ConnectException("Capabilities not reachable.");
@@ -257,12 +266,12 @@ public class OnvifDevice {
 	}
 
 	public String getUTCTime() {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-d'T'HH:mm:ss'Z'");
-		sdf.setTimeZone(new SimpleTimeZone(SimpleTimeZone.UTC_TIME, "UTC"));
-
-		Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
-		String utcTime = sdf.format(cal.getTime());
-		this.utcTime = utcTime;
+//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-d'T'HH:mm:ss'Z'");
+//		sdf.setTimeZone(new SimpleTimeZone(SimpleTimeZone.UTC_TIME, "UTC"));
+//
+//		Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
+//		String utcTime = sdf.format(cal.getTime());
+//		this.utcTime = utcTime;
 		return utcTime;
 	}
 
@@ -338,5 +347,13 @@ public class OnvifDevice {
 	
 	public String reboot() throws ConnectException, SOAPException {
 		return initialDevices.reboot();
+	}
+
+	public Capabilities getCapabilities() {
+		return capabilities;
+	}
+
+	public void setCapabilities(Capabilities capabilities) {
+		this.capabilities = capabilities;
 	}
 }

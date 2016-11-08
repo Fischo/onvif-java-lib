@@ -33,6 +33,7 @@ import org.onvif.ver10.media.wsdl.GetProfileResponse;
 import org.onvif.ver10.media.wsdl.GetProfiles;
 import org.onvif.ver10.media.wsdl.GetProfilesResponse;
 import org.onvif.ver10.schema.Capabilities;
+import org.onvif.ver10.schema.CapabilityCategory;
 import org.onvif.ver10.schema.Date;
 import org.onvif.ver10.schema.Profile;
 import org.onvif.ver10.schema.Scope;
@@ -135,6 +136,7 @@ public class InitialDevices {
 
 	public Capabilities getCapabilities() throws ConnectException, SOAPException {
 		GetCapabilities getCapabilities = new GetCapabilities();
+		getCapabilities.getCategory().add(CapabilityCategory.ALL);
 		GetCapabilitiesResponse response = new GetCapabilitiesResponse();
 
 		try {
