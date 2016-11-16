@@ -2,13 +2,13 @@ package de.onvif;
 
 import java.io.IOException;
 import java.net.ConnectException;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Date;
+import java.util.List;
 
 import javax.xml.soap.SOAPException;
 
-import org.onvif.ver10.schema.Capabilities;
+import org.onvif.ver10.schema.PTZPreset;
 
 import de.onvif.soap.OnvifDevice;
 
@@ -85,14 +85,25 @@ public class OnvifPTZ {
 		nvt.getPtz().stopMove(profileToken);
 	}
 	
+	public void goToPreset(int i){
+		List<PTZPreset> presetList = nvt.getPtz().getPresets(profileToken);
+		nvt.getPtz().gotoPreset(presetList.get(i-1).getToken(), profileToken);
+	}
+	
+	public void setPreset(int i){
+		nvt.getPtz().setPreset(String.valueOf(i), String.valueOf(i), profileToken);
+	}
+	
 	public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
 		OnvifPTZ onvif = new OnvifPTZ("10.6.1.34", "admin", "admin");
 		System.out.println(new Date().toString());
 		onvif.initPTZ();
 		System.out.println(new Date().toString());
-		onvif.moveDown(0.5f);
-		Thread.sleep(5000);
-		onvif.stop();
+//		onvif.setPreset(1);
+		onvif.goToPreset(1);
+//		onvif.moveDown(0.5f);
+//		Thread.sleep(5000);
+//		onvif.stop();
 		
 	}
 }
