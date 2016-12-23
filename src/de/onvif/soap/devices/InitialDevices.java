@@ -140,7 +140,7 @@ public class InitialDevices {
 		GetCapabilitiesResponse response = new GetCapabilitiesResponse();
 
 		try {
-			response = (GetCapabilitiesResponse) soap.createSOAPRequest(getCapabilities, response, onvifDevice.getDeviceUri(), false);
+			response = (GetCapabilitiesResponse) soap.createSOAPRequest(getCapabilities, response, onvifDevice.getDeviceUri(), true);
 		}
 		catch (SOAPException e) {
 			throw e;
