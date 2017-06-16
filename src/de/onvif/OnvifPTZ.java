@@ -94,16 +94,43 @@ public class OnvifPTZ {
 		nvt.getPtz().setPreset(String.valueOf(i), String.valueOf(i), profileToken);
 	}
 	
-	public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
-		OnvifPTZ onvif = new OnvifPTZ("10.6.1.34", "admin", "admin");
-		System.out.println(new Date().toString());
+	public void absoluteMove(Double x,Double y,Double z){
+		if(z == null ){
+			z= new Double(nvt.getPtz().getPosition(profileToken).getZoom().getX());
+		}
+		try {
+			nvt.getPtz().absoluteMove(profileToken, x.floatValue(), y.floatValue(), z.floatValue());
+		} catch (SOAPException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public String getRtspUrl(){
+		try {
+			return nvt.getMedia().getRTSPStreamUri(profileToken,username,password);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException, SOAPException {
+		OnvifPTZ onvif = new OnvifPTZ("10.6.0.231", "admin", "admin");
+//		System.out.println(new Date().toString());
 		onvif.initPTZ();
-		System.out.println(new Date().toString());
+//		System.out.println(new Date().toString());
+//		
+		System.out.println(onvif.getRtspUrl());
+//		onvif.stop();
+//		onvif.moveLeft(0.1f);
+//		Thread.sleep(1000);
+//		onvif.stop();
 //		onvif.setPreset(1);
-		onvif.goToPreset(1);
+//		onvif.goToPreset(1);
 //		onvif.moveDown(0.5f);
 //		Thread.sleep(5000);
 //		onvif.stop();
+		
 		
 	}
 }

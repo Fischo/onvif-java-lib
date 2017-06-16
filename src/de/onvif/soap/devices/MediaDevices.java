@@ -103,13 +103,22 @@ public class MediaDevices {
 		return getStreamUri(setup, profileNumber);
 	}
 	
-	public String getRTSPStreamUri(String profileToken) throws ConnectException, SOAPException {
+	public String getRTSPStreamUri(String profileToken,String username,String password) throws ConnectException, SOAPException {
 		StreamSetup setup = new StreamSetup();
 		setup.setStream(StreamType.RTP_UNICAST);
 		Transport transport = new Transport();
-		transport.setProtocol(TransportProtocol.TCP);
+//		transport.setProtocol(TransportProtocol.TCP);
 		setup.setTransport(transport);
-		return getStreamUri(profileToken, setup);
+		String streamUri = "";
+		try {
+			streamUri = getStreamUri(profileToken, setup);
+		} catch (Exception e) {
+			transport.setProtocol(TransportProtocol.TCP);
+			streamUri = getStreamUri(profileToken, setup);
+		}
+		if(streamUri.contains("//"))
+			streamUri=streamUri.replaceFirst("//", "//"+username+":"+password+"@");
+		return streamUri;
 	}
 	
 	@Deprecated
@@ -131,7 +140,7 @@ public class MediaDevices {
 		request.setStreamSetup(streamSetup);
 
 		try {
-			response = (GetStreamUriResponse) soap.createSOAPMediaRequest(request, response, false);
+			response = (GetStreamUriResponse) soap.createSOAPMediaRequest(request, response, true);
 		}
 		catch (SOAPException | ConnectException e) {
 			throw e;
